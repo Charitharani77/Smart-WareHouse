@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>🚚 Dispatch Center</h1>
+
+<div class="cards">
+
+{% for order in orders %}
+
+    <div class="pick-card">
+
+        <h3>
+            {{ order.order_number }}
+        </h3>
+
+        <p>
+            Customer:
+            {{ order.customer }}
+        </p>
+
+        <p>
+            Status:
+            {{ order.status }}
+        </p>
+
+        {% if order.status == "Dispatch Ready" %}
+
+        <form method="POST"
+              action="{{ url_for(
+              'dispatch_order',
+              order_id=order.id
+              ) }}">
+
+            <button>
+                🚚 Dispatch Order
+            </button>
+
+        </form>
+
+        {% else %}
+
+        <span class="badge success">
+            ✓ Dispatched
+        </span>
+
+        {% endif %}
+
+    </div>
+
+{% else %}
+
+    <div class="panel">
+        No dispatch orders available.
+    </div>
+
+{% endfor %}
+
+</div>
+
+{% endblock %}

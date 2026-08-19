@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>⚠️ Exception Management</h1>
+
+<p>
+    Handle stockouts, partial allocations,
+    damaged products and quality failures.
+</p>
+
+
+<div class="cards">
+
+{% for exception in exceptions %}
+
+    <div class="exception-card">
+
+        <h3>
+            {{ exception.exception_type }}
+        </h3>
+
+        <p>
+            {{ exception.description }}
+        </p>
+
+        <span class="badge
+        {% if exception.status == 'Open' %}
+            danger
+        {% else %}
+            success
+        {% endif %}">
+
+            {{ exception.status }}
+
+        </span>
+
+
+        {% if exception.status == "Open" %}
+
+        <form
+            method="POST"
+            action="{{ url_for(
+            'resolve_exception',
+            id=exception.id
+            ) }}">
+
+            <input
+                name="resolution"
+                placeholder="Enter resolution"
+                required
+            >
+
+            <button>
+                Resolve
+            </button>
+
+        </form>
+
+        {% else %}
+
+        <p>
+            <strong>Resolution:</strong>
+            {{ exception.resolution }}
+        </p>
+
+        {% endif %}
+
+    </div>
+
+{% else %}
+
+    <div class="panel">
+        No exceptions found.
+    </div>
+
+{% endfor %}
+
+</div>
+
+{% endblock %}

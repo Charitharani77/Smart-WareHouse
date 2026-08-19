@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <div>
+        <h1>Warehouse Dashboard</h1>
+
+        <p>
+            Real-time operational intelligence
+        </p>
+    </div>
+
+</div>
+
+
+<div class="stats">
+
+    <div class="stat-card">
+        <span>Total Products</span>
+        <strong>{{ total_products }}</strong>
+        <small>Inventory SKUs</small>
+    </div>
+
+    <div class="stat-card">
+        <span>Total Orders</span>
+        <strong>{{ total_orders }}</strong>
+        <small>All orders</small>
+    </div>
+
+    <div class="stat-card warning">
+        <span>Pending Orders</span>
+        <strong>{{ pending_orders }}</strong>
+        <small>Require action</small>
+    </div>
+
+    <div class="stat-card danger">
+        <span>Low Stock</span>
+        <strong>{{ low_stock }}</strong>
+        <small>Needs attention</small>
+    </div>
+
+    <div class="stat-card success">
+        <span>Dispatched</span>
+        <strong>{{ dispatched }}</strong>
+        <small>Successfully shipped</small>
+    </div>
+
+</div>
+
+
+<div class="dashboard-grid">
+
+    <section class="panel">
+
+        <h2>🧠 Smart Decision Engine</h2>
+
+        {% if bottleneck.count > 0 %}
+
+        <div class="decision-alert">
+
+            <strong>
+                Bottleneck detected:
+            </strong>
+
+            {{ bottleneck.stage }}
+
+            <p>
+                {{ bottleneck.count }}
+                order(s) are currently at this stage.
+            </p>
+
+            <button onclick="showRecommendation()">
+                View Recommendation
+            </button>
+
+        </div>
+
+        {% else %}
+
+        <p>
+            No major bottleneck detected.
+        </p>
+
+        {% endif %}
+
+    </section>
+
+
+    <section class="panel">
+
+        <h2>📋 Recent Orders</h2>
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>Order</th>
+                    <th>Customer</th>
+                    <th>Priority</th>
+                    <th>Status</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+            {% for order in recent_orders %}
+
+                <tr>
+
+                    <td>
+                        {{ order.order_number }}
+                    </td>
+
+                    <td>
+                        {{ order.customer }}
+                    </td>
+
+                    <td>
+
+                        <span class="priority
+                        {{ order.priority|lower }}">
+
+                            {{ order.priority }}
+
+                        </span>
+
+                    </td>
+
+                    <td>
+                        {{ order.status }}
+                    </td>
+
+                </tr>
+
+            {% else %}
+
+                <tr>
+                    <td colspan="4">
+                        No orders yet.
+                    </td>
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </section>
+
+</div>
+
+{% endblock %}

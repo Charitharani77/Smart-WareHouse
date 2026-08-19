@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Inventory Management</h1>
+
+<p>
+    Monitor stock levels and identify products
+    requiring replenishment.
+</p>
+
+
+<div class="panel">
+
+    <h2>📦 Inventory</h2>
+
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>SKU</th>
+                <th>Product</th>
+                <th>Category</th>
+                <th>Stock</th>
+                <th>Reorder Level</th>
+                <th>Location</th>
+                <th>Status</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+        {% for product in products %}
+
+            <tr>
+
+                <td>
+                    {{ product.sku }}
+                </td>
+
+                <td>
+                    {{ product.name }}
+                </td>
+
+                <td>
+                    {{ product.category }}
+                </td>
+
+                <td>
+                    <strong>
+                        {{ product.quantity }}
+                    </strong>
+                </td>
+
+                <td>
+                    {{ product.reorder_level }}
+                </td>
+
+                <td>
+                    {{ product.location }}
+                </td>
+
+                <td>
+
+                    {% if product.quantity == 0 %}
+
+                        <span class="badge danger">
+                            OUT OF STOCK
+                        </span>
+
+                    {% elif product.quantity <= product.reorder_level %}
+
+                        <span class="badge warning">
+                            LOW STOCK
+                        </span>
+
+                    {% else %}
+
+                        <span class="badge success">
+                            HEALTHY
+                        </span>
+
+                    {% endif %}
+
+                </td>
+
+            </tr>
+
+        {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+
+<div class="panel">
+
+    <h2>🚨 Reorder Recommendations</h2>
+
+    {% for alert in alerts %}
+
+        <div class="alert">
+
+            <strong>
+                {{ alert.product }}
+            </strong>
+
+            <span>
+                {{ alert.status }}
+            </span>
+
+            <span>
+                Recommended order:
+                {{ alert.recommended_order }}
+                units
+            </span>
+
+        </div>
+
+    {% else %}
+
+        <p>
+            Inventory levels are healthy.
+        </p>
+
+    {% endfor %}
+
+</div>
+
+{% endblock %}

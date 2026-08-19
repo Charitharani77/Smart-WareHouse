@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        Smart WMS
+    </title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static',
+          filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<header class="topbar">
+
+    <div class="logo">
+        📦 Smart WMS
+    </div>
+
+    <div class="admin">
+        Warehouse Admin
+    </div>
+
+</header>
+
+
+<div class="layout">
+
+    <aside class="sidebar">
+
+        <a href="{{ url_for('dashboard') }}">
+            🏠 Dashboard
+        </a>
+
+        <a href="{{ url_for('inventory') }}">
+            📦 Inventory
+        </a>
+
+        <a href="{{ url_for('orders') }}">
+            🛒 Orders
+        </a>
+
+        <a href="{{ url_for('picking') }}">
+            👷 Picking
+        </a>
+
+        <a href="{{ url_for('dispatch') }}">
+            🚚 Dispatch
+        </a>
+
+        <a href="{{ url_for('exceptions') }}">
+            ⚠️ Exceptions
+        </a>
+
+    </aside>
+
+
+    <main class="content">
+
+        {% block content %}
+
+        {% endblock %}
+
+    </main>
+
+</div>
+
+<script src="{{ url_for(
+    'static',
+    filename='js/app.js'
+) }}"></script>
+
+</body>
+
+</html>

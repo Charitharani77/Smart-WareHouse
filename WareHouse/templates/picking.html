@@ -1,0 +1,209 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <div>
+        <h1>👷 Picking & Packing</h1>
+        <p>
+            Manage warehouse fulfillment operations
+        </p>
+    </div>
+
+</div>
+
+
+<div class="cards">
+
+{% for order in orders %}
+
+    <div class="pick-card">
+
+        <div class="pick-header">
+
+            <strong>
+                {{ order.order_number }}
+            </strong>
+
+            <span class="priority {{ order.priority|lower }}">
+                {{ order.priority }}
+            </span>
+
+        </div>
+
+
+        <p>
+            Customer:
+            <strong>
+                {{ order.customer }}
+            </strong>
+        </p>
+
+
+        <p>
+            Current Status:
+            <strong>
+                {{ order.status }}
+            </strong>
+        </p>
+
+
+        <!-- ALLOCATED ORDER -->
+
+        {% if order.status == "Allocated"
+              or order.status == "Partially Allocated" %}
+
+            <form
+                method="POST"
+                action="{{ url_for(
+                    'start_picking',
+                    order_id=order.id
+                ) }}"
+            >
+
+                <button type="submit">
+                    👷 Start Picking
+                </button>
+
+            </form>
+
+
+        <!-- PICKING ORDER -->
+
+        {% elif order.status == "Picking" %}
+
+            <form
+                method="POST"
+                action="{{ url_for(
+                    'packing',
+                    order_id=order.id
+                ) }}"
+            >
+
+                <button type="submit">
+                    📦 Complete Picking
+                </button>
+
+            </form>
+
+
+        <!-- PACKING ORDER -->
+
+        {% elif order.status == "Packing" %}
+
+            <div>
+
+                <p>
+                    📦 Packing completed?
+                </p>
+
+                <br>
+
+                <form
+                    method="POST"
+                    action="{{ url_for(
+                        'quality_check',
+                        order_id=order.id
+                    ) }}"
+                >
+
+                    <input
+                        type="hidden"
+                        name="result"
+                        value="pass"
+                    >
+
+                    <button type="submit">
+                        ✅ Pass Quality Check
+                    </button>
+
+                </form>
+
+                <br>
+
+                <form
+                    method="POST"
+                    action="{{ url_for(
+                        'quality_check',
+                        order_id=order.id
+                    ) }}"
+                >
+
+                    <input
+                        type="hidden"
+                        name="result"
+                        value="fail"
+                    >
+
+                    <button
+                        type="submit"
+                        class="danger-button"
+                    >
+                        ⚠️ Quality Failed
+                    </button>
+
+                </form>
+
+            </div>
+
+
+        <!-- DISPATCH READY -->
+
+        {% elif order.status == "Dispatch Ready" %}
+
+            <div>
+
+                <span class="badge success">
+                    ✅ Ready for Dispatch
+                </span>
+
+                <br><br>
+
+                <a href="{{ url_for('dispatch') }}">
+                    <button type="button">
+                        🚚 Go to Dispatch
+                    </button>
+                </a>
+
+            </div>
+
+
+        <!-- OTHER STATUS -->
+
+        {% else %}
+
+            <span class="badge">
+                {{ order.status }}
+            </span>
+
+        {% endif %}
+
+    </div>
+
+{% else %}
+
+    <div class="panel">
+
+        <h2>🎉 No pending tasks</h2>
+
+        <p>
+            There are currently no orders waiting
+            for picking, packing or quality checking.
+        </p>
+
+        <br>
+
+        <a href="{{ url_for('orders') }}">
+            <button type="button">
+                🛒 Create New Order
+            </button>
+        </a>
+
+    </div>
+
+{% endfor %}
+
+</div>
+
+{% endblock %}
